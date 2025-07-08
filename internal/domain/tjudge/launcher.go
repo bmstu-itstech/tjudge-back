@@ -18,6 +18,12 @@ func (e ErrProgramException) Error() string {
 	return e.msg
 }
 
+// Result sans the id
+type RunResult struct {
+	ProgramId ProgramId
+	Score int
+}
+
 type Launcher interface {
-	Run(Game, []Program) (Round, error)
+	Run(Game, []Program) ([]RunResult, error)
 }
