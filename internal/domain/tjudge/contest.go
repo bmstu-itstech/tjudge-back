@@ -1,24 +1,15 @@
 package tjudge
 
-import (
-	"context"
-	"errors"
-)
+import "time"
 
-type ContestId uuid
+type ContestId string
 
-var ErrContestNotExist = errors.New("contest doesn't exist")
-var ErrInvalidContest = errors.New("invalid contest passed")
-
+// Объединение игр
 type Contest struct {
-	Id       ContestId
-	GameId   GameId
-	RoundIds []RoundId
-}
-
-type ContestRepository interface {
-	Create(context.Context, GameId) (Contest, error)
-	ActiveContest(context.Context, GameId) (Contest, error)
-	Contests(context.Context) ([]Contest, error)
-	Update(context.Context, Contest) error
+	Id        ContestId
+	Name      string
+	TeamLimit uint
+	Start     time.Time
+	End       time.Time
+	Games     []GameId
 }

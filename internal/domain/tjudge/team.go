@@ -15,6 +15,8 @@ type Team struct {
 	Id        TeamId
 	Name      string
 	CreatedAt time.Time
+	Contest   ContestId
+	JoinCode  string
 }
 
 type TeamRepository interface {

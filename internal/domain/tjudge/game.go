@@ -14,7 +14,7 @@ type Game struct {
 	Id      GameId
 	Players uint
 	Name    string
-	Rules   string
+	RuleUrl string
 }
 
 type GameRepository interface {
