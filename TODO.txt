@@ -1,0 +1,3 @@
+
+* License. I propose AGPL -drew
+* Consider moving allowed extensions from Config to Game
