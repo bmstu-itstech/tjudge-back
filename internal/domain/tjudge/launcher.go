@@ -21,7 +21,7 @@ func (e ErrProgramException) Error() string {
 // Result sans the id
 type RunResult struct {
 	ProgramId ProgramId
-	Score int
+	Score     int
 }
 
 type Launcher interface {

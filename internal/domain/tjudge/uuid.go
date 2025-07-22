@@ -1,3 +1,3 @@
 package tjudge
 
-type uuid string
+type shortUuid string
