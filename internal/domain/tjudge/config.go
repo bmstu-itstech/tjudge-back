@@ -8,5 +8,4 @@ type Config struct {
 	Maintenance  bool
 	JudgeTimeout time.Time
 	FileLimit    int // TODO: kb?
-	AllowedExts  []string
 }

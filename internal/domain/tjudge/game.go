@@ -17,6 +17,7 @@ type Game struct {
 	Name     string
 	Players  uint
 	RulesUrl string
+	AllowedExts  []string
 }
 
 type GameRepository interface {
@@ -24,8 +25,8 @@ type GameRepository interface {
 	Add(context.Context, Game) error
 }
 
-func ParseGame(id GameId, name string, players uint, rules string) (Game, error) {
-	if id == "" || name == "" || players == 0 || rules == "" {
+func ParseGame(id GameId, name string, players uint, rules string, exts []string) (Game, error) {
+	if id == "" || name == "" || players == 0 || rules == "" || exts == nil || len(exts) == 0 {
 		return Game{}, ErrInvalidGame
 	}
 	return Game{
@@ -33,24 +34,25 @@ func ParseGame(id GameId, name string, players uint, rules string) (Game, error)
 		name,
 		players,
 		rules,
+		exts,
 	}, nil
 }
 
-func MustParseGame(id GameId, name string, players uint, rules string) Game {
-	g, err := ParseGame(id, name, players, rules)
+func MustParseGame(id GameId, name string, players uint, rules string, exts []string) Game {
+	g, err := ParseGame(id, name, players, rules, exts)
 	if err != nil {
 		panic(err)
 	}
 	return g
 }
 
-func NewGame(name string, players uint, rules string) (Game, error) {
+func NewGame(name string, players uint, rules string, exts []string) (Game, error) {
 	id := uuid.GenerateShort()
-	return ParseGame(GameId(id), name, players, rules)
+	return ParseGame(GameId(id), name, players, rules, exts)
 }
 
-func MustNewGame(name string, players uint, rules string) Game {
-	g, err := NewGame(name, players, rules)
+func MustNewGame(name string, players uint, rules string, exts []string) Game {
+	g, err := NewGame(name, players, rules, exts)
 	if err != nil {
 		panic(err)
 	}
