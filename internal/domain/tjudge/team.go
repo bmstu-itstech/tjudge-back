@@ -14,11 +14,31 @@ var ErrTeamNotExist = errors.New("team doesn't exist")
 var ErrInvalidTeam = errors.New("invalid team passed")
 
 type Team struct {
-	Id        TeamId
-	Name      string
-	Contest   ContestId
-	CreatedAt time.Time
-	JoinCode  string
+	id         TeamId
+	name       string
+	contest    ContestId
+	created_at time.Time
+	join_code  string
+}
+
+func (t Team) Id() TeamId {
+	return t.id
+}
+
+func (t Team) Name() string {
+	return t.name
+}
+
+func (t Team) Contest() ContestId {
+	return t.contest
+}
+
+func (t Team) CreatedAt() time.Time {
+	return t.created_at
+}
+
+func (t Team) JoinCode() string {
+	return t.join_code
 }
 
 type TeamRepository interface {

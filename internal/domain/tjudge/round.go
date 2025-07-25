@@ -13,8 +13,16 @@ var ErrRoundNotExist = errors.New("round doesn't exist")
 var ErrInvalidRound = errors.New("invalid round passed")
 
 type Round struct {
-	Id        RoundId
-	ResultIds []ResultId
+	id        RoundId
+	result_ids []ResultId
+}
+
+func (r Round) Id() RoundId {
+	return r.id
+}
+
+func (r Round) ResultIds() []ResultId {
+	return r.result_ids
 }
 
 type RoundRepository interface {

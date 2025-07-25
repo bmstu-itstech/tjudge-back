@@ -20,7 +20,7 @@ type JudgeLauncher struct {
 var ErrNoSheBang = errors.New("shebang missing from file")
 
 func HasSheBang(prog tjudge.Program) error {
-	f, err := os.OpenFile(string(prog.Path), os.O_RDONLY, 0644)
+	f, err := os.OpenFile(string(prog.Path()), os.O_RDONLY, 0644)
 	if err != nil {
 		return err
 	}
@@ -35,7 +35,7 @@ func HasSheBang(prog tjudge.Program) error {
 }
 
 func (j JudgeLauncher) Run(game tjudge.Game, progs []tjudge.Program) ([]tjudge.RunResult, error) {
-	if len(progs) != int(game.Players) {
+	if len(progs) != int(game.Players()) {
 		return nil, tjudge.ErrInvalidPlayerCount
 	}
 
@@ -45,9 +45,9 @@ func (j JudgeLauncher) Run(game tjudge.Game, progs []tjudge.Program) ([]tjudge.R
 		}
 	}
 
-	args := []string{string(game.Id)}
+	args := []string{string(game.Id())}
 	for _, p := range progs {
-		args = append(args, string(p.Path))
+		args = append(args, string(p.Path()))
 	}
 	judgeCmd := exec.Command(j.judgePath, args...)
 
@@ -66,18 +66,18 @@ func (j JudgeLauncher) Run(game tjudge.Game, progs []tjudge.Program) ([]tjudge.R
 	}
 
 	results := make([]tjudge.RunResult, 0)
-	for i := range int(game.Players) {
+	for i := range int(game.Players()) {
 		score_str, err := out.ReadString(' ')
 		if err != nil {
 			return nil, err
 		}
 		score_str, _ = strings.CutSuffix(score_str, " ")
 		score, err := strconv.Atoi(score_str)
-		if err != nil && !(i == int(game.Players)-1 && err == io.EOF) {
+		if err != nil && !(i == int(game.Players())-1 && err == io.EOF) {
 			return nil, err
 		}
 		results = append(results, tjudge.RunResult{
-			ProgramId: progs[i].Id,
+			ProgramId: progs[i].Id(),
 			Score:     score,
 		})
 	}

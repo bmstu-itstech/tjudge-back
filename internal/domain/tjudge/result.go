@@ -13,9 +13,21 @@ var ErrResultNotExist = errors.New("result doesn't exist")
 var ErrInvalidResult = errors.New("invalid result passed")
 
 type Result struct {
-	Id        ResultId
-	ProgramId ProgramId
-	Score     int
+	id        ResultId
+	program_id ProgramId
+	score     int
+}
+
+func (r Result) Id() ResultId {
+	return r.id
+}
+
+func (r Result) ProgramId() ProgramId {
+	return r.program_id
+}
+
+func (r Result) Score() int {
+	return r.score
 }
 
 type ResultRepository interface {

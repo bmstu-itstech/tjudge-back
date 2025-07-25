@@ -14,12 +14,36 @@ var ErrContestNotExist = errors.New("contest doesn't exist")
 var ErrInvalidContest = errors.New("invalid contest passed")
 
 type Contest struct {
-	Id        ContestId
-	Name      string
-	TeamLimit uint
-	Start     time.Time
-	End       time.Time
-	Games     []GameId
+	id         ContestId
+	name       string
+	team_limit uint
+	start      time.Time
+	end        time.Time
+	games      []GameId
+}
+
+func (c Contest) Id() ContestId {
+	return c.id
+}
+
+func (c Contest) Name() string {
+	return c.name
+}
+
+func (c Contest) TeamLimit() uint {
+	return c.team_limit
+}
+
+func (c Contest) Start() time.Time {
+	return c.start
+}
+
+func (c Contest) End() time.Time {
+	return c.end
+}
+
+func (c Contest) Games() []GameId {
+	return c.games
 }
 
 type ContestRepository interface {

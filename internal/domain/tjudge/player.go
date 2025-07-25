@@ -14,10 +14,26 @@ var ErrPlayerNotExist = errors.New("player doesn't exist")
 var ErrInvalidPlayer = errors.New("invalid player passed")
 
 type Player struct {
-	Id        PlayerId
-	TeamId    TeamId
-	Username  string
-	CreatedAt time.Time
+	id        PlayerId
+	team_id    TeamId
+	username  string
+	created_at time.Time
+}
+
+func (p Player) Id() PlayerId {
+	return p.id
+}
+
+func (p Player) TeamId() TeamId {
+	return p.team_id
+}
+
+func (p Player) Username() string {
+	return p.username
+}
+
+func (p Player) CreatedAt() time.Time {
+	return p.created_at
 }
 
 type PlayerRepository interface {

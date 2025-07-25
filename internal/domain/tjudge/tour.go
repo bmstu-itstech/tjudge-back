@@ -13,9 +13,21 @@ var ErrTourNotExist = errors.New("tour doesn't exist")
 var ErrInvalidTour = errors.New("invalid tour passed")
 
 type Tour struct {
-	Id       TourId
-	GameId   GameId
-	RoundIds []RoundId
+	id       TourId
+	game_id   GameId
+	round_ids []RoundId
+}
+
+func (t Tour) Id() TourId {
+	return t.id
+}
+
+func (t Tour) GameId() GameId {
+	return t.game_id
+}
+
+func (t Tour) RoundIds() []RoundId {
+	return t.round_ids
 }
 
 type TourRepository interface {

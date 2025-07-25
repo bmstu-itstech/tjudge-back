@@ -13,11 +13,31 @@ var ErrGameNotExist = errors.New("game doesn't exist")
 var ErrInvalidGame = errors.New("invalid game passed")
 
 type Game struct {
-	Id       GameId
-	Name     string
-	Players  uint
-	RulesUrl string
-	AllowedExts  []string
+	id       GameId
+	name     string
+	players  uint
+	rules_url string
+	allowed_exts  []string
+}
+
+func (g Game) Id() GameId {
+	return g.id
+}
+
+func (g Game) Name() string {
+	return g.name
+}
+
+func (g Game) Players() uint {
+	return g.players
+}
+
+func (g Game) RulesUrl() string {
+	return g.rules_url
+}
+
+func (g Game) AllowedExts() []string {
+	return g.allowed_exts
 }
 
 type GameRepository interface {

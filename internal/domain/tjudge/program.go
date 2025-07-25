@@ -16,11 +16,31 @@ type ProgramId shortUuid
 type Path string
 
 type Program struct {
-	Id         ProgramId
-	TeamId     TeamId
-	GameId     GameId
-	Path       Path
-	UploadedAt time.Time
+	id         ProgramId
+	team_id     TeamId
+	game_id     GameId
+	path       Path
+	uploaded_at time.Time
+}
+
+func (p Program) Id() ProgramId {
+	return p.id
+}
+
+func (p Program) TeamId() TeamId {
+	return p.team_id
+}
+
+func (p Program) GameId() GameId {
+	return p.game_id
+}
+
+func (p Program) Path() Path {
+	return p.path
+}
+
+func (p Program) UploadedAt() time.Time {
+	return p.uploaded_at
 }
 
 type ProgramRepository interface {
