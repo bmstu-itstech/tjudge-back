@@ -19,7 +19,7 @@ type Round struct {
 
 type RoundRepository interface {
 	Round(context.Context, RoundId) (Round, error)
-	Add(context.Context, Round) error
+	Upsert(context.Context, Round) error
 }
 
 func ParseRound(id RoundId, results []ResultId) (Round, error) {

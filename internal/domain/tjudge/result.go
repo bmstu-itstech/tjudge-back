@@ -20,7 +20,7 @@ type Result struct {
 
 type ResultRepository interface {
 	Result(context.Context, ResultId) (Result, error)
-	Add(context.Context, Result) error
+	Upsert(context.Context, Result) error
 }
 
 func ParseResult(id ResultId, program ProgramId, score int) (Result, error) {

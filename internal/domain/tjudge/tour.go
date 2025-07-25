@@ -19,7 +19,7 @@ type Tour struct {
 }
 
 type TourRepository interface {
-	Create(context.Context, GameId) (Tour, error)
+	Create(context.Context, GameId) (Tour, error) // initiate a tour by a game
 	ActiveTour(context.Context, GameId) (Tour, error)
 	Tours(context.Context) ([]Tour, error)
 	Update(context.Context, Tour) error

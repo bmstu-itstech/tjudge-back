@@ -22,7 +22,7 @@ type Player struct {
 
 type PlayerRepository interface {
 	Player(context.Context, PlayerId) (Player, error)
-	Add(context.Context, Player) error
+	Upsert(context.Context, Player) error
 }
 
 func ParsePlayer(id PlayerId, team TeamId, name string, created time.Time) (Player, error) {

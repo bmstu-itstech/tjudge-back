@@ -22,7 +22,7 @@ type Game struct {
 
 type GameRepository interface {
 	Game(context.Context, GameId) (Game, error)
-	Add(context.Context, Game) error
+	Upsert(context.Context, Game) error
 }
 
 func ParseGame(id GameId, name string, players uint, rules string, exts []string) (Game, error) {

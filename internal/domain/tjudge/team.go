@@ -23,7 +23,7 @@ type Team struct {
 
 type TeamRepository interface {
 	Team(context.Context, TeamId) (Team, error)
-	Add(context.Context, Team) error
+	Upsert(context.Context, Team) error
 	ByContest(context.Context, ContestId) ([]Team, error)
 	ByJoinCode(context.Context, string) (Team, error)
 }

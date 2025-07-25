@@ -27,7 +27,7 @@ type ProgramRepository interface {
 	ActiveProgram(context.Context, Game, Team) (Program, error)
 	Program(context.Context, ProgramId) (Program, error)
 	Programs(context.Context, Game, Team) ([]Program, error)
-	Add(context.Context, Program) error
+	Upsert(context.Context, Program) error
 }
 
 func ParseProgram(id ProgramId, team TeamId, game GameId, path Path, uploaded time.Time) (Program, error) {

@@ -25,6 +25,7 @@ type Contest struct {
 type ContestRepository interface {
 	Contest(context.Context, ContestId) (Contest, error)
 	Active(context.Context) ([]Contest, error)
+	Upsert(context.Context, Contest) error
 }
 
 func ParseContest(id ContestId, name string, lim uint, start time.Time, end time.Time, g []GameId) (Contest, error) {
