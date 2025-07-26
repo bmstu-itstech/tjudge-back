@@ -8,18 +8,19 @@ import (
 	"github.com/bmstu-itstech/tjudge-back/pkg/uuid"
 )
 
-var ErrNoActiveProgram = errors.New("active program doesn't exist")
+var ErrNoActiveProgram = errors.New("there is no active program")
 var ErrEmptyProgram = errors.New("empty program code")
 var ErrInvalidProgram = errors.New("invalid program passed")
+var ErrProgramNotExist = errors.New("program doesn't passed")
 
 type ProgramId shortUuid
 type Path string
 
 type Program struct {
-	id         ProgramId
+	id          ProgramId
 	team_id     TeamId
 	game_id     GameId
-	path       Path
+	path        Path
 	uploaded_at time.Time
 }
 
@@ -44,9 +45,9 @@ func (p Program) UploadedAt() time.Time {
 }
 
 type ProgramRepository interface {
-	ActiveProgram(context.Context, Game, Team) (Program, error)
+	ActiveProgram(context.Context, GameId, TeamId) (Program, error)
 	Program(context.Context, ProgramId) (Program, error)
-	Programs(context.Context, Game, Team) ([]Program, error)
+	Programs(context.Context, GameId, TeamId) ([]Program, error)
 	Upsert(context.Context, Program) error
 }
 

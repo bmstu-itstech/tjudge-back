@@ -14,9 +14,9 @@ var ErrPlayerNotExist = errors.New("player doesn't exist")
 var ErrInvalidPlayer = errors.New("invalid player passed")
 
 type Player struct {
-	id        PlayerId
+	id         PlayerId
 	team_id    TeamId
-	username  string
+	username   string
 	created_at time.Time
 }
 

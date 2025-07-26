@@ -3,19 +3,22 @@ package tjudge
 import (
 	"context"
 	"errors"
+	"time"
 
 	"github.com/bmstu-itstech/tjudge-back/pkg/uuid"
 )
 
 type TourId shortUuid
 
+var ErrNoActiveTour = errors.New("there is no active tour")
 var ErrTourNotExist = errors.New("tour doesn't exist")
 var ErrInvalidTour = errors.New("invalid tour passed")
 
 type Tour struct {
-	id       TourId
-	game_id   GameId
-	round_ids []RoundId
+	id         TourId
+	game_id    GameId
+	round_ids  []RoundId
+	created_at time.Time
 }
 
 func (t Tour) Id() TourId {
@@ -30,22 +33,26 @@ func (t Tour) RoundIds() []RoundId {
 	return t.round_ids
 }
 
-type TourRepository interface {
-	Create(context.Context, GameId) (Tour, error) // initiate a tour by a game
-	ActiveTour(context.Context, GameId) (Tour, error)
-	Tours(context.Context) ([]Tour, error)
-	Update(context.Context, Tour) error
+func (t Tour) CreatedAt() time.Time {
+	return t.created_at
 }
 
-func ParseTour(id TourId, game GameId, rounds []RoundId) (Tour, error) {
-	if id == "" || game == "" || rounds == nil {
+type TourRepository interface {
+	Tour(context.Context, TourId) (Tour, error)
+	Active(context.Context, GameId) (Tour, error)
+	Tours(context.Context, GameId) ([]Tour, error)
+	Upsert(context.Context, Tour) error
+}
+
+func ParseTour(id TourId, game GameId, rounds []RoundId, created_at time.Time) (Tour, error) {
+	if id == "" || game == "" || rounds == nil || created_at.IsZero() {
 		return Tour{}, ErrInvalidTour
 	}
-	return Tour{id, game, rounds}, nil
+	return Tour{id, game, rounds, created_at}, nil
 }
 
-func MustParseTour(id TourId, game GameId, rounds []RoundId) Tour {
-	t, err := ParseTour(id, game, rounds)
+func MustParseTour(id TourId, game GameId, rounds []RoundId, created_at time.Time) Tour {
+	t, err := ParseTour(id, game, rounds, created_at)
 	if err != nil {
 		panic(err)
 	}
@@ -56,7 +63,8 @@ func NewTour(game GameId) (Tour, error) {
 	// here we assume a new tour doesn't have any rounds because... how?
 	id := uuid.GenerateShort()
 	rounds := make([]RoundId, 0)
-	return ParseTour(TourId(id), game, rounds)
+	created_at := time.Now()
+	return ParseTour(TourId(id), game, rounds, created_at)
 }
 
 func MustNewTour(game GameId) Tour {

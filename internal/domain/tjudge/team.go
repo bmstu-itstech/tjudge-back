@@ -16,7 +16,7 @@ var ErrInvalidTeam = errors.New("invalid team passed")
 type Team struct {
 	id         TeamId
 	name       string
-	contest    ContestId
+	contest_id ContestId
 	created_at time.Time
 	join_code  string
 }
@@ -29,8 +29,8 @@ func (t Team) Name() string {
 	return t.name
 }
 
-func (t Team) Contest() ContestId {
-	return t.contest
+func (t Team) ContestId() ContestId {
+	return t.contest_id
 }
 
 func (t Team) CreatedAt() time.Time {

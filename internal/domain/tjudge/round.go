@@ -13,7 +13,7 @@ var ErrRoundNotExist = errors.New("round doesn't exist")
 var ErrInvalidRound = errors.New("invalid round passed")
 
 type Round struct {
-	id        RoundId
+	id         RoundId
 	result_ids []ResultId
 }
 

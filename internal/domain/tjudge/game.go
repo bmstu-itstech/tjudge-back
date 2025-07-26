@@ -13,11 +13,11 @@ var ErrGameNotExist = errors.New("game doesn't exist")
 var ErrInvalidGame = errors.New("invalid game passed")
 
 type Game struct {
-	id       GameId
-	name     string
-	players  uint
-	rules_url string
-	allowed_exts  []string
+	id           GameId
+	name         string
+	players      uint
+	rules_url    string
+	allowed_exts []string
 }
 
 func (g Game) Id() GameId {

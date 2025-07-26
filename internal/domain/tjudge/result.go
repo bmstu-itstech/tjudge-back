@@ -13,9 +13,9 @@ var ErrResultNotExist = errors.New("result doesn't exist")
 var ErrInvalidResult = errors.New("invalid result passed")
 
 type Result struct {
-	id        ResultId
+	id         ResultId
 	program_id ProgramId
-	score     int
+	score      int
 }
 
 func (r Result) Id() ResultId {
