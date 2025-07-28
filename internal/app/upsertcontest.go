@@ -30,7 +30,7 @@ func (h upsertContestHandler) Handle(ctx context.Context, cmd UpsertContest) err
 		cmd.Name,
 		cmd.TeamLimit,
 		cmd.Starts, cmd.Ends,
-		gameIdsFromDto(cmd.GameIds))
+		gameIdsFromDto(cmd.GameIds)) // TODO: verify games exist?
 	if err != nil {
 		return err
 	}

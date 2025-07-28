@@ -16,6 +16,9 @@ type Queries struct {
 	ActiveTourHandler
 	GetResultHandler
 	GetRoundHandler
+	GetTeamHandler
+	CreateTeamHandler
+	GetPlayerHandler
 }
 
 type Application struct {

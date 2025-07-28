@@ -28,7 +28,7 @@ func (h createContestHandler) Handle(ctx context.Context, cmd CreateContest) err
 		cmd.Name,
 		cmd.TeamLimit,
 		cmd.Starts, cmd.Ends,
-		gameIdsFromDto(cmd.GameIds))
+		gameIdsFromDto(cmd.GameIds)) // TODO: Verify games exist?
 	if err != nil {
 		return err
 	}

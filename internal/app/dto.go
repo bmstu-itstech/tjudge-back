@@ -156,3 +156,22 @@ func roundToDto(r tjudge.Round) Round {
 		resultIdsToDto(r.ResultIds()),
 	}
 }
+
+func teamToDto(t tjudge.Team) Team {
+	return Team{
+		string(t.Id()),
+		t.Name(),
+		string(t.ContestId()),
+		t.CreatedAt(),
+		t.JoinCode(),
+	}
+}
+
+func playerToDto(p tjudge.Player) Player {
+	return Player{
+		string(p.Id()),
+		string(p.TeamId()),
+		p.Username(),
+		p.CreatedAt(),
+	}
+}
