@@ -47,14 +47,14 @@ func (r *MockProgramRepository) ActiveProgram(ctx context.Context, game tjudge.G
 	r.Lock()
 	defer r.Unlock()
 	// can you smell it? the crutch?
-	program := tjudge.MustParseProgram("id", team, game, "path", time.Unix(0, 1))
+	program := tjudge.MustParseProgram("id", team, game, time.Unix(0, 1))
 	for _, v := range r.m {
 		if v.GameId() == game && v.TeamId() == team && v.UploadedAt().After(program.UploadedAt()) {
 			program = v
 		}
 	}
 	if program.UploadedAt().Equal(time.Unix(0, 1)) {
-		return tjudge.Program{},  fmt.Errorf("%w: game:%s/team:%s", tjudge.ErrNoActiveProgram, game, team)
+		return tjudge.Program{}, fmt.Errorf("%w: game:%s/team:%s", tjudge.ErrNoActiveProgram, game, team)
 	}
 	return program, nil
 }

@@ -20,7 +20,6 @@ type Program struct {
 	id          ProgramId
 	team_id     TeamId
 	game_id     GameId
-	path        Path
 	uploaded_at time.Time
 }
 
@@ -36,10 +35,6 @@ func (p Program) GameId() GameId {
 	return p.game_id
 }
 
-func (p Program) Path() Path {
-	return p.path
-}
-
 func (p Program) UploadedAt() time.Time {
 	return p.uploaded_at
 }
@@ -51,42 +46,40 @@ type ProgramRepository interface {
 	Upsert(context.Context, Program) error
 }
 
-func ParseProgram(id ProgramId, team TeamId, game GameId, path Path, uploaded time.Time) (Program, error) {
+type ProgramFileRepository interface {
+	Upload(context.Context, ProgramId, []byte) error
+	Get(context.Context, ProgramId) ([]byte, error)
+}
+
+func ParseProgram(id ProgramId, team TeamId, game GameId, uploaded time.Time) (Program, error) {
 	if id == "" || team == "" || game == "" || uploaded.IsZero() {
 		return Program{}, ErrInvalidProgram
-	}
-	if path == "" {
-		// TODO: Need a better way to check if program is empty.
-		// Are they stored as paths to files on server?
-		// Can we just try to read them?
-		return Program{}, ErrEmptyProgram
 	}
 
 	return Program{
 		id,
 		team,
 		game,
-		path,
 		uploaded,
 	}, nil
 }
 
-func MustParseProgram(id ProgramId, team TeamId, game GameId, path Path, uploaded time.Time) Program {
-	p, err := ParseProgram(id, team, game, path, uploaded)
+func MustParseProgram(id ProgramId, team TeamId, game GameId, uploaded time.Time) Program {
+	p, err := ParseProgram(id, team, game, uploaded)
 	if err != nil {
 		panic(err)
 	}
 	return p
 }
 
-func NewProgram(team TeamId, game GameId, path Path) (Program, error) {
+func NewProgram(team TeamId, game GameId) (Program, error) {
 	id := uuid.GenerateShort()
 	uploaded := time.Now()
-	return ParseProgram(ProgramId(id), team, game, path, uploaded)
+	return ParseProgram(ProgramId(id), team, game, uploaded)
 }
 
 func MustNewProgram(team TeamId, game GameId, path Path) Program {
-	p, err := NewProgram(team, game, path)
+	p, err := NewProgram(team, game)
 	if err != nil {
 		panic(err)
 	}
