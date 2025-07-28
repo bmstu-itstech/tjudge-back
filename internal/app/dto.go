@@ -98,3 +98,13 @@ func batchContestsToDto(cs []tjudge.Contest) []Contest {
 	}
 	return out
 }
+
+func gameToDto(g tjudge.Game) Game {
+	return Game{
+		string(g.Id()),
+		g.Name(),
+		g.Players(),
+		g.RulesUrl(),
+		g.AllowedExts(),
+	}
+}
