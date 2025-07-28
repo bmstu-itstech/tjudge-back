@@ -17,9 +17,9 @@ type Contest struct {
 	id         ContestId
 	name       string
 	team_limit uint
-	start      time.Time
-	end        time.Time
-	games      []GameId
+	starts     time.Time
+	ends       time.Time
+	game_ids   []GameId
 }
 
 func (c Contest) Id() ContestId {
@@ -34,16 +34,16 @@ func (c Contest) TeamLimit() uint {
 	return c.team_limit
 }
 
-func (c Contest) Start() time.Time {
-	return c.start
+func (c Contest) Starts() time.Time {
+	return c.starts
 }
 
-func (c Contest) End() time.Time {
-	return c.end
+func (c Contest) Ends() time.Time {
+	return c.ends
 }
 
-func (c Contest) Games() []GameId {
-	return c.games
+func (c Contest) GameIds() []GameId {
+	return c.game_ids
 }
 
 type ContestRepository interface {

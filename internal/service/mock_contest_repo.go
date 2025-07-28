@@ -29,7 +29,7 @@ func (r *MockContestRepository) Active(ctx context.Context) ([]tjudge.Contest, e
 	defer r.Unlock()
 	active := make([]tjudge.Contest, 0)
 	for _, v := range r.m {
-		if v.Start().Before(time.Now()) && v.End().After(time.Now()) {
+		if v.Starts().Before(time.Now()) && v.Ends().After(time.Now()) {
 			active = append(active, v)
 		}
 	}
