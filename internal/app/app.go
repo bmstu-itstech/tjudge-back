@@ -11,6 +11,11 @@ type Queries struct {
 	GetContestHandler
 	ActiveContestsHandler
 	GetGameHandler
+	GetTourHandler
+	GetToursHandler
+	ActiveTourHandler
+	GetResultHandler
+	GetRoundHandler
 }
 
 type Application struct {

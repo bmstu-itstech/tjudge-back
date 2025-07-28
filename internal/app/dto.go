@@ -108,3 +108,51 @@ func gameToDto(g tjudge.Game) Game {
 		g.AllowedExts(),
 	}
 }
+
+func roundIdsToDto(r []tjudge.RoundId) []string {
+	ids := make([]string, 0, len(r))
+	for _, v := range r {
+		ids = append(ids, string(v))
+	}
+	return ids
+}
+
+func tourToDto(t tjudge.Tour) Tour {
+	return Tour{
+		string(t.Id()),
+		string(t.GameId()),
+		roundIdsToDto(t.RoundIds()),
+		t.CreatedAt(),
+	}
+}
+
+func batchToursToDto(ts []tjudge.Tour) []Tour {
+	out := make([]Tour, 0, len(ts))
+	for _, t := range ts {
+		out = append(out, tourToDto(t))
+	}
+	return out
+}
+
+func resultToDto(r tjudge.Result) Result {
+	return Result{
+		string(r.Id()),
+		string(r.ProgramId()),
+		r.Score(),
+	}
+}
+
+func resultIdsToDto(r []tjudge.ResultId) []string {
+	ids := make([]string, 0, len(r))
+	for _, v := range r {
+		ids = append(ids, string(v))
+	}
+	return ids
+}
+
+func roundToDto(r tjudge.Round) Round {
+	return Round{
+		string(r.Id()),
+		resultIdsToDto(r.ResultIds()),
+	}
+}

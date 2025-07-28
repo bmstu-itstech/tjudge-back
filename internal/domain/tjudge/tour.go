@@ -59,16 +59,14 @@ func MustParseTour(id TourId, game GameId, rounds []RoundId, created_at time.Tim
 	return t
 }
 
-func NewTour(game GameId) (Tour, error) {
-	// here we assume a new tour doesn't have any rounds because... how?
+func NewTour(game GameId, rounds []RoundId) (Tour, error) {
 	id := uuid.GenerateShort()
-	rounds := make([]RoundId, 0)
 	created_at := time.Now()
 	return ParseTour(TourId(id), game, rounds, created_at)
 }
 
-func MustNewTour(game GameId) Tour {
-	t, err := NewTour(game)
+func MustNewTour(game GameId, rounds []RoundId) Tour {
+	t, err := NewTour(game, rounds)
 	if err != nil {
 		panic(err)
 	}
