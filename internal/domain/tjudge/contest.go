@@ -52,36 +52,35 @@ type ContestRepository interface {
 	Upsert(context.Context, Contest) error
 }
 
-func ParseContest(id ContestId, name string, lim uint, start time.Time, end time.Time, g []GameId) (Contest, error) {
-	if id == "" || name == "" || lim == 0 || start.IsZero() || end.IsZero() || start.After(end) || g == nil {
+func ParseContest(id ContestId, name string, lim uint, starts time.Time, ends time.Time, g []GameId) (Contest, error) {
+	if id == "" || name == "" || lim == 0 || starts.IsZero() || ends.IsZero() || ends.Before(starts) || g == nil {
 		return Contest{}, ErrInvalidContest
 	}
 	return Contest{
 		id,
 		name,
 		lim,
-		start,
-		end,
+		starts,
+		ends,
 		g,
 	}, nil
 }
 
-func MustParseContest(id ContestId, name string, lim uint, start time.Time, end time.Time, g []GameId) Contest {
-	c, err := ParseContest(id, name, lim, start, end, g)
+func MustParseContest(id ContestId, name string, lim uint, starts time.Time, ends time.Time, g []GameId) Contest {
+	c, err := ParseContest(id, name, lim, starts, ends, g)
 	if err != nil {
 		panic(err)
 	}
 	return c
 }
 
-func NewContest(name string, lim uint, start time.Time, end time.Time) (Contest, error) {
+func NewContest(name string, lim uint, starts time.Time, ends time.Time, g []GameId) (Contest, error) {
 	id := uuid.GenerateShort()
-	g := make([]GameId, 0)
-	return ParseContest(ContestId(id), name, lim, start, end, g)
+	return ParseContest(ContestId(id), name, lim, starts, ends, g)
 }
 
-func MustNewContest(name string, lim uint, start time.Time, end time.Time) Contest {
-	c, err := NewContest(name, lim, start, end)
+func MustNewContest(name string, lim uint, starts time.Time, ends time.Time, g []GameId) Contest {
+	c, err := NewContest(name, lim, starts, ends, g)
 	if err != nil {
 		panic(err)
 	}
