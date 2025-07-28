@@ -13,14 +13,8 @@ Memo: Don't work on teams/players too much until the situation is cleared up!
 * Team by code
 * Teams by contest
 * Add player to team (check for limits!)
-* Remove player from team (captain becomes oldest present player?)
-* Change captain
+* Remove player from team?
 
 * Create player (checks for contest start)
 * Update player (not upsert?)
 
-* Upload program (oh boy)
-* Program by id
-* Program source by id
-* Active program by game and team
-* Programs by game and team

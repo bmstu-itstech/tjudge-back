@@ -1,6 +1,7 @@
 package app
 
 type Commands struct {
+	UploadProgramHandler
 	CreateContestHandler
 	UpsertContestHandler
 	CreateGameHandler
@@ -8,6 +9,10 @@ type Commands struct {
 }
 
 type Queries struct {
+	GetProgramHandler
+	GetProgramsHandler
+	ActiveProgramHandler
+	GetProgramSourceHandler
 	GetContestHandler
 	ActiveContestsHandler
 	GetGameHandler
