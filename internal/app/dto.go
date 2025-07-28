@@ -34,8 +34,13 @@ type Program struct {
 	Id         string
 	TeamId     string
 	GameId     string
-	Path       string
 	UploadedAt time.Time
+}
+
+type ProgramSource struct {
+	Id   string
+	Code []byte
+	Ext  string
 }
 
 type Result struct {
@@ -173,5 +178,30 @@ func playerToDto(p tjudge.Player) Player {
 		string(p.TeamId()),
 		p.Username(),
 		p.CreatedAt(),
+	}
+}
+
+func programToDto(p tjudge.Program) Program {
+	return Program{
+		string(p.Id()),
+		string(p.TeamId()),
+		string(p.GameId()),
+		p.UploadedAt(),
+	}
+}
+
+func batchProgramsToDto(ps []tjudge.Program) []Program {
+	out := make([]Program, 0, len(ps))
+	for _, p := range ps {
+		out = append(out, programToDto(p))
+	}
+	return out
+}
+
+func sourceToDto(s tjudge.ProgramSource) ProgramSource {
+	return ProgramSource{
+		string(s.Id()),
+		s.Code(),
+		s.Ext(),
 	}
 }

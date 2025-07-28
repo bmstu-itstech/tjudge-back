@@ -13,6 +13,9 @@ type ContestId shortUuid
 var ErrContestNotExist = errors.New("contest doesn't exist")
 var ErrInvalidContest = errors.New("invalid contest passed")
 var ErrNoLateJoin = errors.New("cannot join contest after it started")
+var ErrContestInactive = errors.New("contest isn't active")
+var ErrContestNotContainGame = errors.New("contest doesn't contain the game")
+var ErrContestNotContainTeam = errors.New("team isn't part of the contest")
 
 type Contest struct {
 	id         ContestId

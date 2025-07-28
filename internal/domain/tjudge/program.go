@@ -9,7 +9,6 @@ import (
 )
 
 var ErrNoActiveProgram = errors.New("there is no active program")
-var ErrEmptyProgram = errors.New("empty program code")
 var ErrInvalidProgram = errors.New("invalid program passed")
 var ErrProgramNotExist = errors.New("program doesn't passed")
 
@@ -40,15 +39,10 @@ func (p Program) UploadedAt() time.Time {
 }
 
 type ProgramRepository interface {
-	ActiveProgram(context.Context, GameId, TeamId) (Program, error)
+	Active(context.Context, GameId, TeamId) (Program, error)
 	Program(context.Context, ProgramId) (Program, error)
 	Programs(context.Context, GameId, TeamId) ([]Program, error)
 	Upsert(context.Context, Program) error
-}
-
-type ProgramFileRepository interface {
-	Upload(context.Context, ProgramId, []byte) error
-	Get(context.Context, ProgramId) ([]byte, error)
 }
 
 func ParseProgram(id ProgramId, team TeamId, game GameId, uploaded time.Time) (Program, error) {
