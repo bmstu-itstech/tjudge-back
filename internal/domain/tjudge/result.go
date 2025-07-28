@@ -36,8 +36,7 @@ type ResultRepository interface {
 }
 
 func ParseResult(id ResultId, program ProgramId, score int) (Result, error) {
-	// TODO: can a result be negative? can we *lose* real hard?
-	if id == "" || program == "" || score < 0 {
+	if id == "" || program == "" {
 		return Result{}, ErrInvalidResult
 	}
 	return Result{id, program, score}, nil
