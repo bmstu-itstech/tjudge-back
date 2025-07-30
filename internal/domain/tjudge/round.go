@@ -13,16 +13,16 @@ var ErrRoundNotExist = errors.New("round doesn't exist")
 var ErrInvalidRound = errors.New("invalid round passed")
 
 type Round struct {
-	id         RoundId
-	result_ids []ResultId
+	id      RoundId
+	results []Result
 }
 
 func (r Round) Id() RoundId {
 	return r.id
 }
 
-func (r Round) ResultIds() []ResultId {
-	return r.result_ids
+func (r Round) Results() []Result {
+	return r.results
 }
 
 type RoundRepository interface {
@@ -30,14 +30,14 @@ type RoundRepository interface {
 	Upsert(context.Context, Round) error
 }
 
-func ParseRound(id RoundId, results []ResultId) (Round, error) {
+func ParseRound(id RoundId, results []Result) (Round, error) {
 	if id == "" || results == nil {
 		return Round{}, ErrInvalidRound
 	}
 	return Round{id, results}, nil
 }
 
-func MustParseRound(id RoundId, results []ResultId) Round {
+func MustParseRound(id RoundId, results []Result) Round {
 	r, err := ParseRound(id, results)
 	if err != nil {
 		panic(err)
@@ -45,13 +45,13 @@ func MustParseRound(id RoundId, results []ResultId) Round {
 	return r
 }
 
-func NewRound(results []ResultId) (Round, error) {
+func NewRound(results []Result) (Round, error) {
 	// would we need a function which also initialises results?
 	id := uuid.GenerateShort()
 	return ParseRound(RoundId(id), results)
 }
 
-func MustNewRound(results []ResultId) Round {
+func MustNewRound(results []Result) Round {
 	r, err := NewRound(results)
 	if err != nil {
 		panic(err)

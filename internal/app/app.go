@@ -19,7 +19,6 @@ type Queries struct {
 	GetTourHandler
 	GetToursHandler
 	ActiveTourHandler
-	GetResultHandler
 	GetRoundHandler
 	GetTeamHandler
 	CreateTeamHandler

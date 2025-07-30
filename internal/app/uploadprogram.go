@@ -32,8 +32,7 @@ type uploadProgramHandler struct {
 	gr  tjudge.GameRepository
 	cr  tjudge.ContestRepository
 	tor tjudge.TourRepository
-	ror tjudge.RoundRepository
-	rer tjudge.ResultRepository
+	rr  tjudge.RoundRepository
 	la  tjudge.Launcher
 }
 
@@ -57,7 +56,7 @@ func (h uploadProgramHandler) Handle(ctx context.Context, cmd UploadProgram) err
 
 	team, err := h.ter.Team(ctx, tjudge.TeamId(cmd.TeamId))
 	if err != nil {
-		return err // check that team exists
+		return err
 	}
 	contest, err := h.cr.Contest(ctx, team.ContestId())
 	if err != nil {
@@ -99,16 +98,12 @@ func (h uploadProgramHandler) Handle(ctx context.Context, cmd UploadProgram) err
 	}
 	new_rounds := make([]tjudge.RoundId, 0)
 	for _, round_id := range tour.RoundIds() {
-		round, err := h.ror.Round(ctx, round_id)
+		round, err := h.rr.Round(ctx, round_id)
 		if err != nil {
 			return err
 		}
 		rerun := false
-		for _, result_id := range round.ResultIds() {
-			result, err := h.rer.Result(ctx, result_id)
-			if err != nil {
-				return err
-			}
+		for _, result := range round.Results() {
 			r_program, err := h.pr.Program(ctx, result.ProgramId())
 			if err != nil {
 				return err
@@ -149,19 +144,11 @@ func (h uploadProgramHandler) Handle(ctx context.Context, cmd UploadProgram) err
 		if err != nil {
 			return err
 		}
-		ids := make([]tjudge.ResultId, 0, len(results))
-		for _, res := range results {
-			err = h.rer.Upsert(ctx, res)
-			if err != nil {
-				return err
-			}
-			ids = append(ids, res.Id())
-		}
-		round, err := tjudge.NewRound(ids)
+		round, err := tjudge.NewRound(results)
 		if err != nil {
 			return err
 		}
-		if err = h.ror.Upsert(ctx, round); err != nil {
+		if err = h.rr.Upsert(ctx, round); err != nil {
 			return err
 		}
 		new_rounds = append(new_rounds, round.Id())
@@ -181,11 +168,10 @@ func NewUploadProgramHandler(
 	gr tjudge.GameRepository,
 	cr tjudge.ContestRepository,
 	tor tjudge.TourRepository,
-	ror tjudge.RoundRepository,
-	rer tjudge.ResultRepository,
+	rr tjudge.RoundRepository,
 	la tjudge.Launcher,
 	l *slog.Logger,
 	mc decorator.MetricsClient,
 ) UploadProgramHandler {
-	return decorator.ApplyCommandDecorators(uploadProgramHandler{cfg, pr, prs, ter, gr, cr, tor, ror, rer, la}, l, mc)
+	return decorator.ApplyCommandDecorators(uploadProgramHandler{cfg, pr, prs, ter, gr, cr, tor, rr, la}, l, mc)
 }

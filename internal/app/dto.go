@@ -50,8 +50,8 @@ type Result struct {
 }
 
 type Round struct {
-	Id        string
-	ResultIds []string
+	Id      string
+	Results []Result
 }
 
 type Team struct {
@@ -147,18 +147,18 @@ func resultToDto(r tjudge.Result) Result {
 	}
 }
 
-func resultIdsToDto(r []tjudge.ResultId) []string {
-	ids := make([]string, 0, len(r))
-	for _, v := range r {
-		ids = append(ids, string(v))
+func batchResultsToDto(rs []tjudge.Result) []Result {
+	out := make([]Result, 0, len(rs))
+	for _, r := range rs {
+		out = append(out, resultToDto(r))
 	}
-	return ids
+	return out
 }
 
 func roundToDto(r tjudge.Round) Round {
 	return Round{
 		string(r.Id()),
-		resultIdsToDto(r.ResultIds()),
+		batchResultsToDto(r.Results()),
 	}
 }
 

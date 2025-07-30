@@ -1,7 +1,6 @@
 package tjudge
 
 import (
-	"context"
 	"errors"
 
 	"github.com/bmstu-itstech/tjudge-back/pkg/uuid"
@@ -28,11 +27,6 @@ func (r Result) ProgramId() ProgramId {
 
 func (r Result) Score() int {
 	return r.score
-}
-
-type ResultRepository interface {
-	Result(context.Context, ResultId) (Result, error)
-	Upsert(context.Context, Result) error
 }
 
 func ParseResult(id ResultId, program ProgramId, score int) (Result, error) {
