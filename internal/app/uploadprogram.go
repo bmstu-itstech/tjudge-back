@@ -9,7 +9,6 @@ import (
 
 	"github.com/bmstu-itstech/tjudge-back/internal/domain/tjudge"
 	"github.com/bmstu-itstech/tjudge-back/pkg/decorator"
-	"github.com/bmstu-itstech/tjudge-back/pkg/util"
 )
 
 // Welcome to the most fun file in this whole project.
@@ -31,9 +30,7 @@ type uploadProgramHandler struct {
 	ter tjudge.TeamRepository
 	gr  tjudge.GameRepository
 	cr  tjudge.ContestRepository
-	tor tjudge.TourRepository
-	rr  tjudge.RoundRepository
-	la  tjudge.Launcher
+	ul  tjudge.UploadListener
 }
 
 func (h uploadProgramHandler) Handle(ctx context.Context, cmd UploadProgram) error {
@@ -92,72 +89,7 @@ func (h uploadProgramHandler) Handle(ctx context.Context, cmd UploadProgram) err
 		return err
 	}
 
-	tour, err := h.tor.Active(ctx, game.Id())
-	if err != nil {
-		return err
-	}
-	new_rounds := make([]tjudge.RoundId, 0)
-	for _, round_id := range tour.RoundIds() {
-		round, err := h.rr.Round(ctx, round_id)
-		if err != nil {
-			return err
-		}
-		rerun := false
-		for _, result := range round.Results() {
-			r_program, err := h.pr.Program(ctx, result.ProgramId())
-			if err != nil {
-				return err
-			}
-			if r_program.TeamId() == tjudge.TeamId(cmd.TeamId) {
-				rerun = true
-				break
-			}
-		}
-		if !rerun {
-			new_rounds = append(new_rounds, round.Id())
-		}
-	}
-	contest_teams, err := h.ter.ByContest(ctx, contest.Id())
-	if err != nil {
-		return err
-	}
-	programs := make([]tjudge.Program, 0)
-	for _, t := range contest_teams {
-		pr, err := h.pr.Active(ctx, game.Id(), t.Id())
-		if err != tjudge.ErrProgramNotExist {
-			return err
-		}
-		if err == nil {
-			programs = append(programs, pr)
-		}
-	}
-	iterator := util.Iter{}
-	iterator.N = len(programs)
-	iterator.K = int(game.Players() - 1)
-	for iterator.Next() {
-		to_run := make([]tjudge.Program, 0, game.Players())
-		to_run = append(to_run, program)
-		for _, v := range iterator.Combination {
-			to_run = append(to_run, programs[v])
-		}
-		results, err := h.la.Run(game, to_run)
-		if err != nil {
-			return err
-		}
-		round, err := tjudge.NewRound(results)
-		if err != nil {
-			return err
-		}
-		if err = h.rr.Upsert(ctx, round); err != nil {
-			return err
-		}
-		new_rounds = append(new_rounds, round.Id())
-	}
-	new_tour, err := tjudge.NewTour(game.Id(), new_rounds)
-	if err != nil {
-		return err
-	}
-	return h.tor.Upsert(ctx, new_tour)
+	return h.ul.OnUpload(ctx, game.Id())
 }
 
 func NewUploadProgramHandler(
@@ -167,11 +99,9 @@ func NewUploadProgramHandler(
 	ter tjudge.TeamRepository,
 	gr tjudge.GameRepository,
 	cr tjudge.ContestRepository,
-	tor tjudge.TourRepository,
-	rr tjudge.RoundRepository,
-	la tjudge.Launcher,
+	ul tjudge.UploadListener,
 	l *slog.Logger,
 	mc decorator.MetricsClient,
 ) UploadProgramHandler {
-	return decorator.ApplyCommandDecorators(uploadProgramHandler{cfg, pr, prs, ter, gr, cr, tor, rr, la}, l, mc)
+	return decorator.ApplyCommandDecorators(uploadProgramHandler{cfg, pr, prs, ter, gr, cr, ul}, l, mc)
 }

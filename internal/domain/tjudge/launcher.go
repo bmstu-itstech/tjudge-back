@@ -19,5 +19,5 @@ func (e ErrProgramException) Error() string {
 }
 
 type Launcher interface {
-	Run(Game, []Program) ([]Result, error)
+	Run(GameId, []ProgramId) RoundEvent
 }

@@ -9,6 +9,7 @@ type Commands struct {
 }
 
 type Queries struct {
+	GetStandingsHandler
 	GetProgramHandler
 	GetProgramsHandler
 	ActiveProgramHandler
@@ -16,10 +17,6 @@ type Queries struct {
 	GetContestHandler
 	ActiveContestsHandler
 	GetGameHandler
-	GetTourHandler
-	GetToursHandler
-	ActiveTourHandler
-	GetRoundHandler
 	GetTeamHandler
 	CreateTeamHandler
 	GetPlayerHandler

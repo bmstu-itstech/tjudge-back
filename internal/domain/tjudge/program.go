@@ -40,6 +40,7 @@ func (p Program) UploadedAt() time.Time {
 
 type ProgramRepository interface {
 	Active(context.Context, GameId, TeamId) (Program, error)
+	Actives(context.Context, GameId) (map[TeamId]ProgramId, error)
 	Program(context.Context, ProgramId) (Program, error)
 	Programs(context.Context, GameId, TeamId) ([]Program, error)
 	Upsert(context.Context, Program) error
