@@ -1,0 +1,36 @@
+
+Get active Contests
+Get all Contests
+Get a Contest
+Create a Contest
+Upsert a Contest
+Delete a Contest
+
+Get standings (results) for a Contest
+
+Get all Games
+Get a Game
+Create a Game
+Upsert a Game
+Delete a Game
+Add a Game to a Contest
+Remove a Game from a Contest
+
+Get active Program for a Team
+Upload a Program
+
+Get a Team
+Create a Team
+Upsert a Team
+Delete a Team
+
+Get a Player
+Create a Player
+Upsert a Player
+Delete a Player
+Add a Player to a Team?
+Remove a Player from a Team?
+? - if teams are tied to contests,
+    we likely don't want untethered players
+
+Get active program for a team
