@@ -17,3 +17,5 @@ type UploadedEvent struct {
 func (e UploadedEvent) Name() string {
 	return "program_uploaded_event"
 }
+
+func (e UploadedEvent) IsEvent() {}

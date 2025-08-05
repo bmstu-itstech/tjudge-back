@@ -18,7 +18,7 @@ func (h *ProgramUploadedHandler) Handle(ctx context.Context, event program.Uploa
 		return err
 	}
 
-	evs, err := c.ScheduleAllMatches()
+	evs, err := c.ScheduleMatchesFor(event.TeamID, event.GameID)
 	if err != nil {
 		return err
 	}

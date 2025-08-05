@@ -7,6 +7,8 @@ import (
 	"github.com/bmstu-itstech/tjudge-back/internal/domain/shared"
 )
 
+var ErrMatchAlreadyFinished = errors.New("match has already finished")
+
 type MatchResult struct {
 	R1 Result
 	R2 Result
@@ -14,7 +16,7 @@ type MatchResult struct {
 
 type Match struct {
 	ID          shared.ID
-	ContestID   shared.ID
+	GameID      shared.ID
 	Team1ID     shared.ID
 	Team2ID     shared.ID
 	ScheduledAt time.Time
@@ -22,7 +24,8 @@ type Match struct {
 	FinishedAt  *time.Time
 }
 
-func ScheduleMatch(contestID shared.ID, team1ID shared.ID, team2ID shared.ID) (*Match, ScheduledMatchEvent, error) {
+// TODO: ...where can we get an error here???
+func ScheduleMatch(gameID shared.ID, team1ID shared.ID, team2ID shared.ID) (*Match, ScheduledMatchEvent, error) {
 	m := &Match{
 		ID:          shared.NewID(),
 		Team1ID:     team1ID,
@@ -34,7 +37,7 @@ func ScheduleMatch(contestID shared.ID, team1ID shared.ID, team2ID shared.ID) (*
 
 	e := ScheduledMatchEvent{
 		MatchID:   m.ID,
-		ContestID: contestID,
+		GameID:    gameID,
 		Team1ID:   team1ID,
 		Team2ID:   team2ID,
 		Timestamp: time.Now(),
@@ -42,8 +45,6 @@ func ScheduleMatch(contestID shared.ID, team1ID shared.ID, team2ID shared.ID) (*
 
 	return m, e, nil
 }
-
-var ErrMatchAlreadyFinished = errors.New("match is already finished")
 
 func (m *Match) Finish(r1 Result, r2 Result) error {
 	if m.FinishedAt != nil {

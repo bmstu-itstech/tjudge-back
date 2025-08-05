@@ -18,3 +18,12 @@ Memo: Don't work on teams/players too much until the situation is cleared up!
 * Create player (checks for contest start)
 * Update player (not upsert?)
 
+---
+
+Unfortunate Developments
+
+* only 2 players
+* accepted extensions configured server-wide
+* (FIXED) inefficient round-robin is back
+* (at least temp) unique ids, immutability and constructors gone
+* (FIXED) 1 game per contest
