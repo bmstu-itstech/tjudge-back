@@ -21,7 +21,7 @@ type Contest struct {
 	Teams  map[shared.ID]*Team
 }
 
-func (c *Contest) ScheduleMatchesFor(teamId shared.ID, gameId shared.ID) ([]ScheduledMatchEvent, error) {
+func (c *Contest) ScheduleMatchesFor(teamId shared.ID, gameId shared.ID) ([]MatchScheduledEvent, error) {
 	game, ok := c.Games[gameId]
 	if !ok {
 		return nil, fmt.Errorf("%w (id: %s)", ErrContestNotContainGame, gameId)
@@ -31,7 +31,7 @@ func (c *Contest) ScheduleMatchesFor(teamId shared.ID, gameId shared.ID) ([]Sche
 		return nil, fmt.Errorf("%w (id: %s)", ErrContestNotContainTeam, teamId)
 	}
 
-	events := make([]ScheduledMatchEvent, 0)
+	events := make([]MatchScheduledEvent, 0)
 	for id, match := range game.Matches {
 		if match.Team1ID != teamId && match.Team2ID != teamId {
 			continue
@@ -53,13 +53,13 @@ func (c *Contest) ScheduleMatchesFor(teamId shared.ID, gameId shared.ID) ([]Sche
 	return events, nil
 }
 
-func (c *Contest) ScheduleAllMatchesFor(gameId shared.ID) ([]ScheduledMatchEvent, error) {
+func (c *Contest) ScheduleAllMatchesFor(gameId shared.ID) ([]MatchScheduledEvent, error) {
 	game, ok := c.Games[gameId]
 	if !ok {
 		return nil, fmt.Errorf("%w (id: %s)", ErrContestNotContainGame, gameId)
 	}
 	game.Matches = make(map[shared.ID]*Match)
-	events := make([]ScheduledMatchEvent, 0)
+	events := make([]MatchScheduledEvent, 0)
 	for t1 := range c.Teams {
 		for t2 := range c.Teams {
 			if t1 != t2 {
@@ -75,8 +75,8 @@ func (c *Contest) ScheduleAllMatchesFor(gameId shared.ID) ([]ScheduledMatchEvent
 	return events, nil
 }
 
-func (c *Contest) ScheduleAllMatches() ([]ScheduledMatchEvent, error) {
-	events := make([]ScheduledMatchEvent, 0)
+func (c *Contest) ScheduleAllMatches() ([]MatchScheduledEvent, error) {
+	events := make([]MatchScheduledEvent, 0)
 	for _, game := range c.Games {
 		new_events, err := c.ScheduleAllMatchesFor(game.Id)
 		if err != nil {

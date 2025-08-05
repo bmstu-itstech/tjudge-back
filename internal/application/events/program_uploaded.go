@@ -2,17 +2,21 @@ package events
 
 import (
 	"context"
+	"log/slog"
 
 	"github.com/bmstu-itstech/tjudge-back/internal/application/ports"
 	"github.com/bmstu-itstech/tjudge-back/internal/domain/program"
+	"github.com/bmstu-itstech/tjudge-back/pkg/decorator"
 )
 
-type ProgramUploadedHandler struct {
+type ProgramUploadedConsumer decorator.EventConsumer
+
+type programUploadedHandler struct {
 	repos     ports.ContestRepository
 	publisher ports.EventPublisher
 }
 
-func (h *ProgramUploadedHandler) Handle(ctx context.Context, event program.UploadedEvent) error {
+func (h programUploadedHandler) Handle(ctx context.Context, event program.UploadedEvent) error {
 	c, err := h.repos.Contest(ctx, event.ContestID)
 	if err != nil {
 		return err
@@ -36,4 +40,13 @@ func (h *ProgramUploadedHandler) Handle(ctx context.Context, event program.Uploa
 	}
 
 	return nil
+}
+
+func NewProgramUploadedConsumer(
+	repos ports.ContestRepository,
+	publisher ports.EventPublisher,
+	l *slog.Logger,
+	mc decorator.MetricsClient,
+) decorator.EventConsumer {
+	return decorator.ApplyConsumerDecorators(programUploadedHandler{repos, publisher}, l, mc)
 }

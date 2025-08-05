@@ -6,7 +6,7 @@ import (
 	"github.com/bmstu-itstech/tjudge-back/internal/domain/shared"
 )
 
-type ScheduledMatchEvent struct {
+type MatchScheduledEvent struct {
 	MatchID   shared.ID
 	ContestID shared.ID
 	GameID    shared.ID
@@ -15,8 +15,8 @@ type ScheduledMatchEvent struct {
 	Timestamp time.Time
 }
 
-func (e ScheduledMatchEvent) Name() string {
-	return "contest_scheduled_match_event"
+func (e MatchScheduledEvent) Name() string {
+	return "contest_match_scheduled_event"
 }
 
-func (e ScheduledMatchEvent) IsEvent() {}
+func (e MatchScheduledEvent) IsEvent() {}

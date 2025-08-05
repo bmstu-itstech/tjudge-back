@@ -25,7 +25,7 @@ type Match struct {
 }
 
 // TODO: ...where can we get an error here???
-func ScheduleMatch(gameID shared.ID, team1ID shared.ID, team2ID shared.ID) (*Match, ScheduledMatchEvent, error) {
+func ScheduleMatch(gameID shared.ID, team1ID shared.ID, team2ID shared.ID) (*Match, MatchScheduledEvent, error) {
 	m := &Match{
 		ID:          shared.NewID(),
 		Team1ID:     team1ID,
@@ -35,7 +35,7 @@ func ScheduleMatch(gameID shared.ID, team1ID shared.ID, team2ID shared.ID) (*Mat
 		FinishedAt:  nil,
 	}
 
-	e := ScheduledMatchEvent{
+	e := MatchScheduledEvent{
 		MatchID:   m.ID,
 		GameID:    gameID,
 		Team1ID:   team1ID,

@@ -2,18 +2,22 @@ package events
 
 import (
 	"context"
+	"log/slog"
 
 	"github.com/bmstu-itstech/tjudge-back/internal/application/ports"
 	"github.com/bmstu-itstech/tjudge-back/internal/domain/contest"
+	"github.com/bmstu-itstech/tjudge-back/pkg/decorator"
 )
 
-type ScheduledMatchEventHandler struct {
+type MatchScheduledEventConsumer decorator.EventConsumer
+
+type matchScheduledEventHandler struct {
 	contestRepos ports.ContestRepository
 	programRepos ports.ProgramRepository
 	judge        ports.Judge
 }
 
-func (h *ScheduledMatchEventHandler) Handle(ctx context.Context, event contest.ScheduledMatchEvent) error {
+func (h matchScheduledEventHandler) Handle(ctx context.Context, event contest.MatchScheduledEvent) error {
 	c, err := h.contestRepos.Contest(ctx, event.ContestID)
 	if err != nil {
 		return err
@@ -50,4 +54,14 @@ func (h *ScheduledMatchEventHandler) Handle(ctx context.Context, event contest.S
 	}
 
 	return h.contestRepos.Upsert(ctx, c)
+}
+
+func NewMatchScheduledConsumer(
+	contestRepos ports.ContestRepository,
+	programRepos ports.ProgramRepository,
+	judge ports.Judge,
+	l *slog.Logger,
+	mc decorator.MetricsClient,
+) decorator.EventConsumer {
+	return decorator.ApplyConsumerDecorators(matchScheduledEventHandler{contestRepos, programRepos, judge}, l, mc)
 }
