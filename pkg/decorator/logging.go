@@ -4,7 +4,14 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
+	"strings"
+
+	"github.com/bmstu-itstech/tjudge-back/internal/domain/shared"
 )
+
+func generateActionName(handler any) string {
+	return strings.Split(fmt.Sprintf("%T", handler), ".")[1]
+}
 
 type commandLoggingDecorator[C any] struct {
 	base   CommandHandler[C]
@@ -52,4 +59,27 @@ func (d queryLoggingDecorator[C, R]) Handle(ctx context.Context, cmd C) (result 
 	}()
 
 	return d.base.Handle(ctx, cmd)
+}
+
+type consumerLoggingDecorator[E shared.Event] struct {
+	base   EventConsumerHandler[E]
+	logger *slog.Logger
+}
+
+func (d consumerLoggingDecorator[E]) Handle(ctx context.Context, e E) (err error) {
+	logger := d.logger.With(
+		slog.String("consumer", generateActionName(e)),
+		slog.String("consumer_body", fmt.Sprintf("%v", e)),
+	)
+
+	logger.Debug("Consuming event")
+	defer func() {
+		if err == nil {
+			logger.Info("Event successfully consumed")
+		} else {
+			logger.Error("Failed to consume event", "error", err.Error())
+		}
+	}()
+
+	return d.base.Handle(ctx, e)
 }

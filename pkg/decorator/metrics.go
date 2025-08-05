@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"strings"
 	"time"
+
+	"github.com/bmstu-itstech/tjudge-back/internal/domain/shared"
 )
 
 type MetricsClient interface {
@@ -18,7 +20,6 @@ type commandMetricsDecorator[C any] struct {
 
 func (d commandMetricsDecorator[C]) Handle(ctx context.Context, cmd C) (err error) {
 	start := time.Now()
-
 	actionName := strings.ToLower(generateActionName(cmd))
 
 	defer func() {
@@ -43,20 +44,43 @@ type queryMetricsDecorator[C any, R any] struct {
 
 func (d queryMetricsDecorator[C, R]) Handle(ctx context.Context, query C) (result R, err error) {
 	start := time.Now()
-
 	actionName := strings.ToLower(generateActionName(query))
 
 	defer func() {
 		end := time.Since(start)
 
-		d.client.Inc(fmt.Sprintf("querys.%s.duration", actionName), int(end.Seconds()))
+		d.client.Inc(fmt.Sprintf("queries.%s.duration", actionName), int(end.Seconds()))
 
 		if err == nil {
-			d.client.Inc(fmt.Sprintf("querys.%s.success", actionName), 1)
+			d.client.Inc(fmt.Sprintf("queries.%s.success", actionName), 1)
 		} else {
-			d.client.Inc(fmt.Sprintf("querys.%s.failure", actionName), 1)
+			d.client.Inc(fmt.Sprintf("queries.%s.failure", actionName), 1)
 		}
 	}()
 
 	return d.base.Handle(ctx, query)
+}
+
+type consumerMetricsDecorator[E shared.Event] struct {
+	base   EventConsumerHandler[E]
+	client MetricsClient
+}
+
+func (d consumerMetricsDecorator[E]) Handle(ctx context.Context, e E) (err error) {
+	start := time.Now()
+	actionName := strings.ToLower(generateActionName(e))
+
+	defer func() {
+		end := time.Since(start)
+
+		d.client.Inc(fmt.Sprintf("consumers.%s.duration", actionName), int(end.Seconds()))
+
+		if err == nil {
+			d.client.Inc(fmt.Sprintf("consumers.%s.success", actionName), 1)
+		} else {
+			d.client.Inc(fmt.Sprintf("consumers.%s.failure", actionName), 1)
+		}
+	}()
+
+	return d.base.Handle(ctx, e)
 }
