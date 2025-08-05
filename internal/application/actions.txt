@@ -1,29 +1,33 @@
+I = Infrastructure in place
+D = Done
 
-Get active Contests
-Get all Contests
-Get a Contest
-Create a Contest
-Upsert a Contest
-Delete a Contest
+I Get active Contests
+I Get all Contests
+I Get a Contest
+I Create a Contest
+I Upsert a Contest
+I Delete a Contest
 
-Get standings (results) for a Contest
+I Get standings (results) for a Contest's Game
 
-Get all Games
-Get a Game
-Create a Game
-Upsert a Game
-Delete a Game
+I Get all Games
+I Get a Game
+I Create a Game
+I Upsert a Game
+I Delete a Game
 Add a Game to a Contest
 Remove a Game from a Contest
 
-Get active Program for a Team
-Upload a Program
+I Get active Program for a Team
+I Upload a Program
+I Get a Program by id
 
+?? - I agreed to stay away from these.
 Get a Team
 Create a Team
 Upsert a Team
 Delete a Team
-
+??
 Get a Player
 Create a Player
 Upsert a Player
@@ -32,5 +36,3 @@ Add a Player to a Team?
 Remove a Player from a Team?
 ? - if teams are tied to contests,
     we likely don't want untethered players
-
-Get active program for a team

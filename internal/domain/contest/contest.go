@@ -99,3 +99,21 @@ func (c *Contest) FinishMatch(gameId shared.ID, matchId shared.ID, r1 Result, r2
 	}
 	return match.Finish(r1, r2)
 }
+
+func (c *Contest) Standings(gameId shared.ID) (map[shared.ID]Score, error) {
+	game, ok := c.Games[gameId]
+	if !ok {
+		return nil, fmt.Errorf("%w (id: %s)", ErrContestNotContainGame, gameId)
+	}
+
+	standings := make(map[shared.ID]Score)
+	for _, match := range game.Matches {
+		if match.Result.R1.ErrMsg == nil {
+			standings[match.Team1ID] += match.Result.R1.Score
+		}
+		if match.Result.R2.ErrMsg == nil {
+			standings[match.Team2ID] += match.Result.R2.Score
+		}
+	}
+	return standings, nil
+}

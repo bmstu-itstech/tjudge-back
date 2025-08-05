@@ -19,7 +19,7 @@ func (h *ScheduledMatchEventHandler) Handle(ctx context.Context, event contest.S
 		return err
 	}
 
-	p1, found, err := h.programRepos.LastTeamProgram(ctx, event.Team1ID, event.GameID)
+	p1, found, err := h.programRepos.Active(ctx, event.Team1ID, event.GameID)
 	if err != nil {
 		return err
 	}
@@ -29,7 +29,7 @@ func (h *ScheduledMatchEventHandler) Handle(ctx context.Context, event contest.S
 		return nil
 	}
 
-	p2, found, err := h.programRepos.LastTeamProgram(ctx, event.Team2ID, event.GameID)
+	p2, found, err := h.programRepos.Active(ctx, event.Team2ID, event.GameID)
 	if err != nil {
 		return err
 	}
@@ -44,5 +44,10 @@ func (h *ScheduledMatchEventHandler) Handle(ctx context.Context, event contest.S
 		return err
 	}
 
-	return c.FinishMatch(event.GameID, event.MatchID, r1, r2)
+	err = c.FinishMatch(event.GameID, event.MatchID, r1, r2)
+	if err != nil {
+		return err
+	}
+
+	return h.contestRepos.Upsert(ctx, c)
 }

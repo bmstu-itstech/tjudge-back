@@ -8,7 +8,7 @@ import (
 )
 
 type ProgramRepository interface {
-	Save(ctx context.Context, p *program.Program) error
+	Upsert(ctx context.Context, p *program.Program) error
 	Program(ctx context.Context, id shared.ID) (*program.Program, error)
-	LastTeamProgram(ctx context.Context, teamID shared.ID, game shared.ID) (*program.Program, bool, error)
+	Active(ctx context.Context, teamID shared.ID, game shared.ID) (*program.Program, bool, error)
 }

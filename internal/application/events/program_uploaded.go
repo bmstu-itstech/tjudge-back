@@ -23,6 +23,11 @@ func (h *ProgramUploadedHandler) Handle(ctx context.Context, event program.Uploa
 		return err
 	}
 
+	err = h.repos.Upsert(ctx, c)
+	if err != nil {
+		return err
+	}
+
 	for _, ev := range evs {
 		err = h.publisher.Publish(ctx, ev)
 		if err != nil {

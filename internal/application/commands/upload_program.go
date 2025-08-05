@@ -34,7 +34,7 @@ func (h *UploadProgramHandler) Handle(ctx context.Context, cmd UploadProgram) er
 		return err
 	}
 
-	if err = h.repos.Save(ctx, p); err != nil {
+	if err = h.repos.Upsert(ctx, p); err != nil {
 		_ = h.storage.Delete(ctx, path)
 		return err
 	}
