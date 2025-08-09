@@ -12,5 +12,6 @@ type ContestRepository interface {
 	Contest(ctx context.Context, id shared.ID) (*contest.Contest, error)
 	All(ctx context.Context) ([]*contest.Contest, error)
 	Active(ctx context.Context) ([]*contest.Contest, error)
+	With(ctx context.Context, gameId shared.ID) ([]*contest.Contest, error)
 	Delete(ctx context.Context, id shared.ID) error
 }

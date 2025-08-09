@@ -18,7 +18,6 @@ type UpsertContest struct {
 	Starts  time.Time
 	Ends    time.Time
 	GameIds []string
-	TeamIds []string
 }
 
 type UpsertContestHandler decorator.CommandHandler[UpsertContest]
@@ -42,22 +41,22 @@ func (h upsertContestHandler) Handle(ctx context.Context, cmd UpsertContest) err
 		}
 		games[id] = game
 	}
-	ids, err = idsFromDto(cmd.TeamIds)
-	if err != nil {
-		return err
-	}
-	teams := make(map[shared.ID]*contest.Team)
-	for _, id := range ids {
-		team, err := h.tr.Team(ctx, id)
-		if err != nil {
-			return err
-		}
-		teams[id] = team
-	}
 	id, err := uuid.Parse(cmd.Id)
 	if err != nil {
 		return err
 	}
+	// get all related teams
+	// (if something ever happens to team repo, we can go long way 'round and try to request entire contest)
+	// (I hope this doesn't fail if the contest doesn't exist yet... surely we'd just get a 0 len arr?)
+	team_arr, err := h.tr.ByContest(ctx, shared.ID(id))
+	if err != nil {
+		return err
+	}
+	teams := make(map[shared.ID]*contest.Team)
+	for _, team := range team_arr {
+		teams[team.Id] = team
+	}
+
 	contest, err := contest.ParseContest(
 		shared.ID(id),
 		cmd.Name,

@@ -12,11 +12,11 @@ D I Get standings (results) for a Contest's Game
 
 D I Get all Games
 D I Get a Game
-I Create a Game
-I Upsert a Game
-I Delete a Game
-Add a Game to a Contest
-Remove a Game from a Contest
+D I Create a Game
+D I Upsert a Game
+D I Delete a Game
+D I Add a Game to a Contest
+D I Remove a Game from a Contest
 
 D I Get active Program for a Team
 D I Upload a Program
@@ -30,6 +30,7 @@ Delete a Team
 ??
 Get a Player
 Create a Player
+Create a Player by join code
 Upsert a Player
 Delete a Player
 Add a Player to a Team?

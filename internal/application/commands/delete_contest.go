@@ -28,12 +28,13 @@ func (h deleteContestHandler) Handle(ctx context.Context, cmd DeleteContest) err
 	}
 	id := shared.ID(uid)
 	// assuming we also want to delete all related teams
+	// TODO: ...but we don't delete the teams' programs?
 	teams, err := h.tr.ByContest(ctx, id)
 	if err != nil {
 		return err
 	}
 	for _, t := range teams {
-		if err := h.tr.Delete(ctx, t.ID); err != nil {
+		if err := h.tr.Delete(ctx, t.Id); err != nil {
 			return err
 		}
 	}

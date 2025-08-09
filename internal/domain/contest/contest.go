@@ -11,6 +11,7 @@ import (
 var ErrInvalidContest = errors.New("invalid contest passed")
 var ErrContestNotExist = errors.New("contest doesn't exist")
 
+var ErrContestAlreadyContainGame = errors.New("game is already part of contest")
 var ErrContestNotContainGame = errors.New("game isn't part of contest")
 var ErrContestNotContainTeam = errors.New("team isn't part of contest")
 var ErrContestNotContainMatch = errors.New("match isn't part of contest")

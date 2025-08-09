@@ -7,8 +7,8 @@ import (
 )
 
 type Team struct {
-	ID        shared.ID
-	ContestID shared.ID
+	Id        shared.ID
+	ContestId shared.ID
 	Name      shared.ID
 	CreatedAt time.Time
 	JoinCode  string
