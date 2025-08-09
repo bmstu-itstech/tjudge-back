@@ -1,12 +1,12 @@
 I = Infrastructure in place
 D = Done
 
-I Get active Contests
-I Get all Contests
-I Get a Contest
-I Create a Contest
-I Upsert a Contest
-I Delete a Contest
+D I Get active Contests
+D I Get all Contests
+D I Get a Contest
+D I Create a Contest
+D I Upsert a Contest
+D I Delete a Contest
 
 I Get standings (results) for a Contest's Game
 

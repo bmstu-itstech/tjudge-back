@@ -8,6 +8,9 @@ import (
 	"github.com/bmstu-itstech/tjudge-back/internal/domain/shared"
 )
 
+var ErrInvalidContest = errors.New("invalid contest passed")
+var ErrContestNotExist = errors.New("contest doesn't exist")
+
 var ErrContestNotContainGame = errors.New("game isn't part of contest")
 var ErrContestNotContainTeam = errors.New("team isn't part of contest")
 var ErrContestNotContainMatch = errors.New("match isn't part of contest")
@@ -116,4 +119,36 @@ func (c *Contest) Standings(gameId shared.ID) (map[shared.ID]Score, error) {
 		}
 	}
 	return standings, nil
+}
+
+func ParseContest(id shared.ID, name string, starts time.Time, ends time.Time,
+	games map[shared.ID]*Game, teams map[shared.ID]*Team,
+) (Contest, error) {
+	if len(id) == 0 || name == "" || starts.After(ends) || starts.IsZero() ||
+		ends.IsZero() || games == nil || teams == nil {
+		return Contest{}, ErrInvalidContest
+	}
+	return Contest{id, name, starts, ends, games, teams}, nil
+}
+
+func MustParseContest(id shared.ID, name string, starts time.Time, ends time.Time,
+	games map[shared.ID]*Game, teams map[shared.ID]*Team,
+) Contest {
+	c, err := ParseContest(id, name, starts, ends, games, teams)
+	if err != nil {
+		panic(err)
+	}
+	return c
+}
+
+func NewContest(name string, starts time.Time, ends time.Time, games map[shared.ID]*Game) (Contest, error) {
+	return ParseContest(shared.NewID(), name, starts, ends, games, make(map[shared.ID]*Team))
+}
+
+func MustNewContest(name string, starts time.Time, ends time.Time, games map[shared.ID]*Game) Contest {
+	c, err := NewContest(name, starts, ends, games)
+	if err != nil {
+		panic(err)
+	}
+	return c
 }
