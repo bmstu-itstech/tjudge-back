@@ -1,0 +1,488 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+# ^ holy mother of crutches
+openapi: 3.0.4
+info:
+  title: TJudge API
+  version: 1.0.0
+  description: API for the TJudge backend.
+servers:
+  - url: /api
+paths:
+  /contests:
+    get:
+      summary: List all contests
+      operationId: allContests
+      responses:
+        '200':
+          description: A list of contests
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Contest'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    post:
+      summary: Create a new contest
+      operationId: createContest
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContestCreate'
+      responses:
+        '201':
+          description: Contest created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contest'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /contests/active:
+    get:
+      summary: List active contests
+      operationId: activeContests
+      responses:
+        '200':
+          description: A list of active contests
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Contest'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /contests/{contestId}:
+    get:
+      summary: Get contest by ID
+      operationId: getContest
+      parameters:
+        - name: contestId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/UUID'
+      responses:
+        '200':
+          description: Contest details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    put:
+      summary: Update contest
+      operationId: upsertContest
+      parameters:
+        - name: contestId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/UUID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContestCreate'
+      responses:
+        '200':
+          description: Contest updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contest'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    delete:
+      summary: Delete contest
+      operationId: deleteContest
+      parameters:
+        - name: contestId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/UUID'
+      responses:
+        '204':
+          description: Contest deleted
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /contests/{contestId}/standings:
+    get:
+      summary: Get contest standings
+      operationId: getStandings
+      parameters:
+        - name: contestId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/UUID'
+      responses:
+        '200':
+          description: Contest standings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Standings'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /games:
+    get:
+      summary: List all games
+      operationId: allGames
+      responses:
+        '200':
+          description: A list of games
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Game'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    post:
+      summary: Create a new game
+      operationId: createGame
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GameUpload'
+      responses:
+        '201':
+          description: Game created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /games/{gameId}:
+    get:
+      summary: Get game by ID
+      operationId: getGame
+      parameters:
+        - name: gameId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/UUID'
+      responses:
+        '200':
+          description: Game details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    put:
+      summary: Update game
+      operationId: upsertGame
+      parameters:
+        - name: gameId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/UUID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GameUpload'
+      responses:
+        '200':
+          description: Game updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    delete:
+      summary: Delete game
+      operationId: deleteGame
+      parameters:
+        - name: gameId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/UUID'
+      responses:
+        '204':
+          description: Game deleted
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /programs:
+    post:
+      summary: Upload a program
+      operationId: uploadProgram
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProgramUpload'
+      responses:
+        '201':
+          description: Program uploaded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Program'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /programs/active:
+    get:
+      summary: Get active (latest) program for team/contest/game
+      operationId: activeProgram
+      parameters:
+        - name: teamId
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/UUID'
+        - name: gameId
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/UUID'
+      responses:
+        '200':
+          description: Active program details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Program'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /programs/{programId}:
+    get:
+      summary: Get program by ID
+      operationId: getProgram
+      parameters:
+        - name: programId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/UUID'
+      responses:
+        '200':
+          description: Program details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Program'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+components:
+  schemas:
+    UUID:
+      type: string
+      example: "34e3e097-842c-0326-995a-11fa353ea8b7"
+    Contest:
+      type: object
+      required:
+        - id
+        - name
+        - startTime
+        - endTime
+        - gameIds
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        name:
+          type: string
+          example: "326th Spring Competition"
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+        gameIds:
+          type: array
+          items:
+            $ref: '#/components/schemas/UUID'
+    ContestCreate:
+      type: object
+      required:
+        - name
+        - startTime
+        - endTime
+        - gameIds
+      properties:
+        name:
+          type: string
+          example: "326th Spring Competition"
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+        gameIds:
+          type: array
+          items:
+            $ref: '#/components/schemas/UUID'
+    Game:
+      type: object
+      required:
+        - id
+        - name
+        - rules
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        name:
+          type: string
+          example: "A Factory of Impostors"
+        rules:
+          type: string
+          example: "https://example.org/rules.md"
+    GameUpload:
+      type: object
+      required:
+        - name
+        - rules
+      properties:
+        name:
+          type: string
+          example: "A Factory of Impostors"
+        rules:
+          type: string
+          example: "https://example.org/rules.md"
+    Program:
+      type: object
+      required:
+        - id
+        - teamId
+        - contestId
+        - gameId
+        - file
+        - uploadedAt
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        teamId:
+          $ref: '#/components/schemas/UUID'
+        contestId:
+          $ref: '#/components/schemas/UUID'
+        gameId:
+          $ref: '#/components/schemas/UUID'
+        file:
+          type: string
+          example: "cHJpbnQoIkhlbGxvIFVuaXZlcnNlISIp"
+          format: binary
+        uploadedAt:
+          type: string
+          format: date-time
+    ProgramUpload:
+      type: object
+      required:
+        - teamId
+        - contestId
+        - gameId
+        - file
+      properties:
+        teamId:
+          $ref: '#/components/schemas/UUID'
+        contestId:
+          $ref: '#/components/schemas/UUID'
+        gameId:
+          $ref: '#/components/schemas/UUID'
+        file:
+          type: string
+          format: binary
+    Standings:
+      type: object
+      required:
+        - contestId
+        - standings
+      properties:
+        contestId:
+          $ref: '#/components/schemas/UUID'
+        standings:
+          type: array
+          items:
+            $ref: '#/components/schemas/TeamRanking'
+    TeamRanking:
+      type: object
+      required:
+        - teamId
+        - score
+      properties:
+        teamId:
+          $ref: '#/components/schemas/TeamRanking'
+        score:
+          type: integer
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          example: "I'm a teapot"
+        message:
+          type: string
+          example: "The server is a teapot and cannot brew coffee."
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InternalError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'

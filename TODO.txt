@@ -2,8 +2,6 @@
 * License. I propose AGPL -drew
 * How to handle admin login?
 
-Memo: Don't work on teams/players too much until the situation is cleared up!
-
 ---
 
 Unfortunate Developments
@@ -13,3 +11,21 @@ Unfortunate Developments
 * (FIXED) inefficient round-robin is back
 * (at least temp) unique ids, immutability and constructors gone
 * (FIXED) 1 game per contest
+
+---
+
+Remaining Team/Player related use cases
+Memo: Don't work on these too much until the situation is cleared up!
+
+Get a Team
+Create a Team
+Upsert a Team
+Delete a Team
+
+Get a Player
+Create a Player
+Create a Player by join code
+Upsert a Player
+Delete a Player
+
+Possibly something to do with auth, but again that's not my area :D

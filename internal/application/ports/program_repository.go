@@ -10,5 +10,5 @@ import (
 type ProgramRepository interface {
 	Upsert(ctx context.Context, p *program.Program) error
 	Program(ctx context.Context, id shared.ID) (*program.Program, error)
-	Active(ctx context.Context, teamID shared.ID, game shared.ID) (*program.Program, bool, error)
+	Active(ctx context.Context, teamId shared.ID, gameId shared.ID) (*program.Program, bool, error)
 }
