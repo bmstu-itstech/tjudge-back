@@ -7,10 +7,10 @@ import (
 )
 
 type UploadedEvent struct {
-	ContestID shared.ID
-	GameID    shared.ID
-	TeamID    shared.ID
-	ProgramID shared.ID
+	ContestId shared.ID
+	GameId    shared.ID
+	TeamId    shared.ID
+	ProgramId shared.ID
 	Timestamp time.Time
 }
 

@@ -8,19 +8,19 @@ D I Create a Contest
 D I Upsert a Contest
 D I Delete a Contest
 
-I Get standings (results) for a Contest's Game
+D I Get standings (results) for a Contest's Game
 
-I Get all Games
-I Get a Game
+D I Get all Games
+D I Get a Game
 I Create a Game
 I Upsert a Game
 I Delete a Game
 Add a Game to a Contest
 Remove a Game from a Contest
 
-I Get active Program for a Team
-I Upload a Program
-I Get a Program by id
+D I Get active Program for a Team
+D I Upload a Program
+D I Get a Program by id
 
 ?? - I agreed to stay away from these.
 Get a Team

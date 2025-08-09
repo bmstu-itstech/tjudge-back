@@ -17,12 +17,12 @@ type programUploadedHandler struct {
 }
 
 func (h programUploadedHandler) Handle(ctx context.Context, event program.UploadedEvent) error {
-	c, err := h.repos.Contest(ctx, event.ContestID)
+	c, err := h.repos.Contest(ctx, event.ContestId)
 	if err != nil {
 		return err
 	}
 
-	evs, err := c.ScheduleMatchesFor(event.TeamID, event.GameID)
+	evs, err := c.ScheduleMatchesFor(event.TeamId, event.GameId)
 	if err != nil {
 		return err
 	}
