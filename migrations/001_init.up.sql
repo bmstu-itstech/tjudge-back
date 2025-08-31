@@ -12,7 +12,6 @@ CREATE TABLE teams (
     leader_id INTEGER NOT NULL,
     contest_id INTEGER NOT NULL,
     max_size INTEGER NOT NULL,
-    'CONSTRAINT fk_leader FOREIGN KEY (leader_id) REFERENCES users(id) ON DELETE RESTRICT,'
     CONSTRAINT unique_team_name UNIQUE (name)
 );
 

@@ -173,7 +173,7 @@ func (s HTTPServer) GetTeam(w http.ResponseWriter, r *http.Request, code string)
 		httpError(w, r, err, http.StatusInternalServerError)
 		return
 	}
-	render.JSON(w, r, convertTeamToApi(team))
+	render.JSON(w, r, convertTeamToApi(*team))
 }
 
 func (s HTTPServer) GetTeams(w http.ResponseWriter, r *http.Request) {

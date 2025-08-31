@@ -8,7 +8,7 @@ type App struct {
 	UsersGet GetUsersHandler
 
 	TeamRegister RegisterTeamHandler
-	TeamGet GetTeamHandler
-	TeamsGet GetTeamsHandler
+	TeamGet *GetTeamHandler
+	TeamsGet *GetTeamsHandler
 	TeamDelete DeleteTeamHandler
 }

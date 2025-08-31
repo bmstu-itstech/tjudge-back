@@ -24,22 +24,31 @@ func (r *PostgresTeamRepository) Save(ctx context.Context, team *tjudge.Team) (*
 		return nil, fmt.Errorf("team is nil")
 	}
 
+	var leaderID = 0
+	var contestID = 0
+
 	tx, err := r.db.BeginTxx(ctx, nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to begin transaction: %w", err)
 	}
 	defer tx.Rollback()
 
-	// Используем 0 вместо NULL для пустого лидера
-	leaderID := 0
+	// Используем leaderId только после проверки на nil
 	if team.Leader() != nil {
 		leaderID = int(team.Leader().Id())
 	}
 
+	// Более безопасное получение contest ID
+	contestValue := team.Contest()
+	if contestValue == 0 {
+		return nil, fmt.Errorf("contest is required")
+	}
+	contestID = int(contestValue)
+
 	_, err = pgutils.Exec(ctx, tx, `
 		INSERT INTO teams (code, name, leader_id, contest_id, max_size) 
 		VALUES ($1, $2, $3, $4, $5)`,
-		string(team.Code()), team.Name(), leaderID, int(team.Contest()), team.MaxSize())
+		string(team.Code()), team.Name(), leaderID, contestID, team.MaxSize())
 
 	if pgutils.IsUniqueViolationError(err) {
 		return nil, tjudge.ErrTeamAlreadyExist
@@ -48,6 +57,17 @@ func (r *PostgresTeamRepository) Save(ctx context.Context, team *tjudge.Team) (*
 	}
 
 	for _, member := range team.Members() {
+		// Проверяем, что member не nil
+		if member == nil {
+			fmt.Println("Warning: nil member found in team members")
+			continue
+		}
+		
+		// Проверяем, что лидер не nil перед сравнением
+		if team.Leader() != nil && member.Id() == team.Leader().Id() {
+			continue
+		}
+		
 		_, err := tx.ExecContext(ctx, `
 			INSERT INTO team_members (user_id, team_code) 
 			VALUES ($1, $2) 
@@ -64,7 +84,6 @@ func (r *PostgresTeamRepository) Save(ctx context.Context, team *tjudge.Team) (*
 
 	return team, nil
 }
-
 func (r *PostgresTeamRepository) Team(ctx context.Context, code string) (*tjudge.Team, error) {
 	var row teamRow
 
@@ -103,7 +122,12 @@ func (r *PostgresTeamRepository) Team(ctx context.Context, code string) (*tjudge
 		if err != nil {
 			return nil, fmt.Errorf("failed to get member %d: %w", memberID, err)
 		}
-		members = append(members, member)
+		// Проверяем, что member не nil
+		if member != nil {
+			members = append(members, member)
+		} else {
+			fmt.Printf("Warning: user with ID %d not found\n", memberID)
+		}
 	}
 
 	team := tjudge.RestoreTeam(
@@ -141,6 +165,7 @@ func (r *PostgresTeamRepository) Update(ctx context.Context, team *tjudge.Team) 
 	if team.Leader() != nil {
 		leaderID = int(team.Leader().Id())
 	}
+	print(leaderID)
 
 	err = pgutils.RequireAffected(pgutils.Exec(ctx, tx, `
 		UPDATE teams 
