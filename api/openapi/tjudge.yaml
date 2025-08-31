@@ -1,0 +1,409 @@
+openapi: 3.0.0
+info:
+  title: User Management API
+  description: API for user authentication
+  version: 1.0.0
+
+servers:
+  - url: 'http://{server}/api'
+    variables:
+      server:
+        default: localhost:8000
+
+paths:
+  /users:
+    get:
+      operationId: GetUsers
+      summary: Get all users
+      description: Retrieve a list of all users
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of users retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /register:
+    post:
+      operationId: PostRegister
+      summary: Register a new user
+      description: Create a new user account in the database
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegister'
+      responses:
+        '201':
+          description: User successfully registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: User already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /login:
+    post:
+      operationId: PostLogin
+      summary: Authenticate a user
+      description: Log in an existing user and return an access token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLogin'
+      responses:
+        '200':
+          description: Successful authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthToken'
+        '400':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /users/{id}:
+    get:
+      operationId: GetUser
+      summary: Get user details
+      description: Retrieve user information from the database
+      security:               
+        - bearerAuth: [] 
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer 
+            format: int64
+          description: User ID
+      responses:
+        '200':
+          description: User details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      operationId: DeleteUser
+      summary: Delete a user
+      description: Remove a user from the database
+      security:               
+        - bearerAuth: [] 
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer 
+            format: int64
+          description: User ID
+      responses:
+        '200':
+          description: User deleted successfully
+        '401':         
+          description: Unauthorized (invalid or missing token)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  
+
+
+  /teams:
+    get:
+      operationId: GetTeams
+      summary: Get all teams
+      description: Retrieve a list of all teams
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of teams retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Team'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      operationId: RegisterTeam
+      summary: Register a new team
+      description: Create a new team in the database
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeamRegister'
+      responses:
+        '201':
+          description: Team successfully registered
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Team already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /teams/{code}:
+    get:
+      operationId: GetTeam
+      summary: Get team details
+      description: Retrieve team information by team code
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: code
+          required: true
+          schema:
+            type: string
+          description: Team code
+      responses:
+        '200':
+          description: Team details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Team not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      operationId: DeleteTeam
+      summary: Delete a team
+      description: Remove a team from the database by team code
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: code
+          required: true
+          schema:
+            type: string
+          description: Team code
+      responses:
+        '200':
+          description: Team deleted successfully
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Team not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    UserRegister:
+      type: object
+      required:
+        - username
+        - password
+        - fullname
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        fullname:
+          type: string
+
+    UserLogin:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+
+    UserResponse:
+      type: object
+      required:
+        - id
+        - username
+        - fullname
+      properties:
+        id:
+          type: integer
+        username:
+          type: string
+        fullname:
+          type: string
+
+    AuthToken:
+      type: object
+      required:
+        - accessToken
+      properties:
+        accessToken:
+          type: string
+          description: JWT access token
+
+    Error:
+      description: Error description
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          example: error message
+    TeamRegister:
+      type: object
+      required:
+        - name
+        - code
+        - contest
+      properties:
+        name:
+          type: string
+          description: Team name
+        code:
+          type: string
+          description: Unique team code
+        leader:
+          type: integer
+          format: int64
+          description: ID of the team leader
+        contest:
+          type: integer
+          format: int64
+          description: ID of the contest the team belongs to
+        maxSize:
+          type: integer
+          description: Maximum team size
+          default: 5
+
+    TeamMember:
+      type: object
+      required:
+        - userId
+      properties:
+        userId:
+          type: integer
+          format: int64
+          description: ID of the user to add/remove
+
+    Team:
+      type: object
+      required:
+        - code
+        - name
+        - contest
+        - maxSize
+        - members
+      properties:
+        code:
+          type: string
+          description: Unique team code
+        name:
+          type: string
+          description: Team name
+        leader:
+          nullable: true
+          $ref: '#/components/schemas/UserResponse'
+        contest:
+          type: integer
+          format: int64
+          description: ID of the contest the team belongs to
+        maxSize:
+          type: integer
+          description: Maximum team size
+        members:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserResponse'
+          description: List of team members
+          
+  securitySchemes:
+    bearerAuth:      
+      type: http          
+      scheme: bearer   
+      bearerFormat: JWT  
